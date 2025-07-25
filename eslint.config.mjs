@@ -26,9 +26,52 @@ export default tseslint.config(
   },
   {
     rules: {
+      'object-property-newline': [
+        'error',
+        { allowMultiplePropertiesPerLine: false },
+      ],
+      '@typescript-eslint/explicit-member-accessibility': [
+        'error',
+        { accessibility: 'explicit' },
+      ],
+      '@typescript-eslint/interface-name-prefix': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          args: 'all',
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
+      'import/no-duplicates': [
+        'warn',
+        {
+          considerQueryString: true,
+        },
+      ],
+      'import/order': [
+        'warn',
+        {
+          'newlines-between': 'always',
+          pathGroupsExcludedImportTypes: ['react'],
+          warnOnUnassignedImports: true,
+          groups: [
+            'builtin',
+            'external',
+            'parent',
+            'index',
+            'sibling',
+            'object',
+            'type',
+            'internal',
+          ],
+        },
+      ],
+      'no-console': 'warn',
     },
   },
 );

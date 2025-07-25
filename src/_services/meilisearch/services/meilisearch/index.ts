@@ -1,1 +1,1 @@
-export {MeilisearchService} from './meilisearch.service'
+export { MeilisearchService } from './meilisearch.service';

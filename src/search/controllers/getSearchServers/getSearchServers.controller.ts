@@ -1,12 +1,14 @@
 import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { MeilisearchService } from '@services/meilisearch';
+import { get } from 'lodash';
+
 import {
   GetSearchServersRequest,
   GetSearchServersResponse,
   ServerItem,
 } from './getSearchServers.dto';
-import { MeilisearchService } from '@services/meilisearch';
-import { get } from 'lodash';
+import { ServerRecord } from './getSearchServers.types';
 
 @ApiTags('Search')
 @Controller('search')
@@ -29,20 +31,17 @@ export class GetSearchServersController {
   ): Promise<GetSearchServersResponse> {
     try {
       const { hits, estimatedTotalHits } = await this.meilisearch
-        .index('server')
+        .index<ServerRecord>('server')
         .search(q, {
           limit: take,
           offset: skip,
           attributesToRetrieve: [
             'Category.Icon',
             'Title',
-            'Description',
             'documentId',
             'Logo.url',
           ],
         });
-
-        console.log(hits)
 
       const data = hits.map(
         (item): ServerItem => ({
@@ -53,8 +52,10 @@ export class GetSearchServersController {
         }),
       );
 
-      return { total: estimatedTotalHits, data };
-      console.log(hits);
+      return {
+        data,
+        total: estimatedTotalHits,
+      };
     } catch (error) {
       this.logger.error(error);
       throw error;

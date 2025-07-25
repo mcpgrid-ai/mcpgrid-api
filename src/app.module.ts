@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { MeilisearchModule } from '@services/meilisearch';
-import {SearchModule} from './search'
+
+import { SearchModule } from './search';
 
 @Module({
   imports: [
@@ -14,9 +13,7 @@ import {SearchModule} from './search'
       host: 'http://localhost:7700',
     }),
     // Features
-    SearchModule
+    SearchModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

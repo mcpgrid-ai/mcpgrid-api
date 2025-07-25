@@ -1,1 +1,1 @@
-export {GetSearchServersController} from './getSearchServers.controller'
+export { GetSearchServersController } from './getSearchServers.controller';

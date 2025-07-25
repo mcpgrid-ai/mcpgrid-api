@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
+
 import { MeilisearchModuleConfig } from './meilisearch.types';
 import { MeilisearchService } from './services/meilisearch';
-
 
 @Module({})
 export class MeilisearchModule {

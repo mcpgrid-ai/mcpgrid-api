@@ -1,5 +1,5 @@
 // Module
-export {MeilisearchModule} from './meilisearch.module'
+export { MeilisearchModule } from './meilisearch.module';
 
 // Service
-export {MeilisearchService} from './services/meilisearch'
+export { MeilisearchService } from './services/meilisearch';

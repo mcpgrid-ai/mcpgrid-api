@@ -19,7 +19,7 @@ export class ServerItem {
 
   @ApiProperty({
     type: String,
-    nullable: true
+    nullable: true,
   })
   public readonly logo: string | null;
 }

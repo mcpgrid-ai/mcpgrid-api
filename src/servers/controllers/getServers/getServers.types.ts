@@ -1,6 +1,7 @@
 export interface ServerRecord {
   documentId: string;
   Title: string;
+  Slug: string;
   Logo?: {
     url: string;
   };

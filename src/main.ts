@@ -20,7 +20,7 @@ async function bootstrap() {
     yamlDocumentUrl: 'docs/swagger.yaml',
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 8080);
 }
 
 // eslint-disable-next-line no-console

@@ -3,12 +3,6 @@ name: Meilisearch
 on:
   workflow_dispatch:
 
-# env:
-#   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-#   SERVICE: meilisearch
-#   REGION: us-central1
-#   BUCKET_NAME: meilisearch-data-bucket
-
 jobs:
   meilisearch:
     name: Meilisearch
@@ -48,31 +42,3 @@ jobs:
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
-
-    #   - name: Set up Cloud SDK
-    #     uses: google-github-actions/setup-gcloud@v2
-          
-    #   - name: Deploy to Cloud Run with Cloud Storage Volume
-    #     run: |-
-    #       gcloud run deploy ${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_MEILISEARCH }} \
-    #         --image getmeili/meilisearch:latest \
-    #         --platform managed \
-    #         --region ${{ vars.GCP_REGION }} \
-    #         --port 7700 \
-    #         --set-env-vars MEILI_MASTER_KEY=${{ secrets.MEILISEARCH_API_KEY }} \
-    #         --set-env-vars MEILI_ENV=production \
-    #         --set-env-vars MEILI_HTTP_ADDR=0.0.0.0:7700 \
-    #         --add-volume name=meilisearch-data,type=cloud-storage,bucket=${{ secrets.GCP_MEILISEARCH_BUCKETNAME }} \
-    #         --add-volume-mount volume=meilisearch-data,mount-path=/meili_data \
-    #         --allow-unauthenticated \
-    #         --memory 2Gi \
-    #         --cpu 1 \
-    #         --max-instances 10 \
-    #         --min-instances 1 \
-    #         --concurrency 1000 \
-    #         --timeout 300
-
-    #   - name: Show Output
-    #     run: |-
-    #       echo "Meilisearch deployed with persistent storage!"
-    #       gcloud run services describe ${{ env.SERVICE }} --region=${{ env.REGION }} --format="value(status.url)"

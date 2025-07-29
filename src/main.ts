@@ -1,12 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RequestMethod } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: [
+      {
+        path: '/health',
+        method: RequestMethod.GET,
+      },
+    ],
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Mcpbox API')

@@ -1,24 +1,81 @@
-# Dockerfile
+# # Dockerfile
 
-# Base image
-FROM node:20.18.3
+# # Base image
+# FROM node:20.18.3
+
+# # Set working directory
+# WORKDIR /app
+
+# # Copy package files and install dependencies
+# COPY env.d.ts ./
+# COPY package.json ./
+# COPY yarn.lock ./
+# COPY tsconfig*.json ./
+# COPY nest-cli.json ./
+# COPY src ./src
+
+# RUN yarn
+# RUN yarn build
+
+# # Expose the port (default for NestJS is 3000)
+# EXPOSE 8080
+
+# # Run the app
+# CMD ["node", "dist/main"]
+
+# Multi-stage build for optimal image size
+FROM node:20.18.3 AS builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package files and install dependencies
+# Enable Corepack to use Yarn
+RUN corepack enable
+
+# Copy package files
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install --frozen-lockfile
+
+# Copy source code
 COPY env.d.ts ./
-COPY package.json ./
-COPY yarn.lock ./
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 COPY src ./src
 
-RUN yarn
+# Build the application
 RUN yarn build
 
-# Expose the port (default for NestJS is 3000)
+# Remove dev dependencies
+RUN yarn install --frozen-lockfile --production && yarn cache clean
+
+# Production stage
+FROM node:20.18.3 AS production
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001
+
+# Copy built application and production dependencies from builder stage
+COPY --from=builder --chown=nestjs:nodejs /usr/src/app/dist ./dist
+COPY --from=builder --chown=nestjs:nodejs /usr/src/app/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /usr/src/app/package.json ./package.json
+
+# Switch to non-root user
+USER nestjs
+
+# Expose port
 EXPOSE 8080
 
-# Run the app
-CMD ["node", "dist/main"]
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the application
+CMD ["node", "dist/main.js"]

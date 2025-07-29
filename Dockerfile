@@ -24,7 +24,8 @@
 # CMD ["node", "dist/main"]
 
 # Multi-stage build for optimal image size
-FROM node:20.18.3 AS builder
+# Multi-stage build with Debian base
+FROM node:20-slim AS builder
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -51,17 +52,18 @@ RUN yarn build
 RUN yarn install --frozen-lockfile --production && yarn cache clean
 
 # Production stage
-FROM node:20.18.3 AS production
+FROM node:20-slim AS production
 
 # Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /usr/src/app
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nestjs -u 1001
+RUN groupadd --gid 1001 --system nodejs && \
+    useradd --uid 1001 --system --gid nodejs --shell /bin/bash --create-home nestjs
 
 # Copy built application and production dependencies from builder stage
 COPY --from=builder --chown=nestjs:nodejs /usr/src/app/dist ./dist

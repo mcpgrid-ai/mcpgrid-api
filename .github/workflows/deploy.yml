@@ -46,6 +46,9 @@ jobs:
             --port=8080
             --timeout=300
             --allow-unauthenticated
+          env_vars: |
+            MEILISEARCH_HOST=${{ secrets.MEILISEARCH_HOST }}
+            MEILISEARCH_API_KEY=${{ secrets.MEILISEARCH_API_KEY }}
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}

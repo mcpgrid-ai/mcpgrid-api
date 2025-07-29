@@ -49,6 +49,9 @@ jobs:
           env_vars: |
             MEILISEARCH_HOST=${{ secrets.MEILISEARCH_HOST }}
             MEILISEARCH_API_KEY=${{ secrets.MEILISEARCH_API_KEY }}
+          # secrets: |
+          #   MEILISEARCH_HOST=MEILISEARCH_HOST:latest
+          #   MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}

@@ -18,7 +18,7 @@ RUN yarn
 RUN yarn build
 
 # Expose the port (default for NestJS is 3000)
-EXPOSE 3000
+EXPOSE 8080
 
 # Run the app
 CMD ["node", "dist/main"]

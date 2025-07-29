@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MeilisearchModule } from '@services/meilisearch';
 
 import { ServersModule } from './servers';
+import { HealthModule } from './health';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ServersModule } from './servers';
       host: process.env.MEILISEARCH_HOST,
     }),
     // Features
+    HealthModule,
     ServersModule,
   ],
 })

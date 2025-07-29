@@ -1,11 +1,17 @@
 import { PaginatedQuery, PaginatedResponse, HubIcon } from '@common/dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 export class ServerItem {
   @ApiProperty({
     type: String,
   })
   public readonly id: string;
+
+  @ApiProperty({
+    type: String,
+  })
+  public readonly slug: string;
 
   @ApiProperty({
     type: String,
@@ -24,14 +30,17 @@ export class ServerItem {
   public readonly logo: string | null;
 }
 
-export class GetSearchServersRequest extends PaginatedQuery {
+export class GetServersRequest extends PaginatedQuery {
   @ApiProperty({
     type: String,
+    required: false,
   })
+  @IsOptional()
+  @IsString()
   public readonly q: string;
 }
 
-export class GetSearchServersResponse extends PaginatedResponse<ServerItem> {
+export class GetServersResponse extends PaginatedResponse<ServerItem> {
   @ApiProperty({
     type: ServerItem,
     isArray: true,

@@ -4,52 +4,46 @@ on:
   push:
     branches: main
   workflow_dispatch:
-    inputs:
-      environment:
-        type: environment
+
 
 jobs:
   deploy:
     name: Deploy
-    runs-on: ubuntu-latest
-
     permissions:
       contents: read
       id-token: write
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "yarn"
-
-      - name: Install dependencies
-        run: yarn
-
-      - name: Build application
-        run: yarn build
-
-      - name: Auth to Google Cloud
+      - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_API }}
 
-      - name: Deploy to Google Cloud App Engine
-        uses: google-github-actions/deploy-appengine@v2
+      - name: Docker Auth
+        uses: docker/login-action@v3
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          env_vars: |-
-            PRODUCT_NAME=${{ vars.PRODUCT_NAME }}
-            STRAPI_HOST=${{ secrets.STRAPI_HOST }}
-            STRAPI_API_TOKEN=${{ secrets.STRAPI_API_TOKEN }}
+          registry: ${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_API }}
 
-      - name: Remove Cloud App Engine versions
-        uses: Reviewable/appengine-remove-action@v2.1.2
+      - name: Build and Push Container
+        run: |-
+          docker build -t "${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}:${{ github.sha }}" ./
+          docker push "${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}:${{ github.sha }}"
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
         with:
-          limit: 1
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials: ${{ secrets.GCP_CREDENTIALS_JSON }}
+          service: ${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}
+          region: ${{ vars.GCP_REGION }}
+          image: ${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}:${{ github.sha }}
+
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
+
+      

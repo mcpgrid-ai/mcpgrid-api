@@ -14,7 +14,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "docker": "docker-compose up -d",
-    "act": "act -j deploy --secret-file .env --env-file .env --var-file .env --container-architecture linux/amd64 --use-gitignore=false --container-daemon-socket /var/run/docker.sock"
+    "act": "act -j meilisearch --secret-file .env --env-file .env --var-file .env --container-architecture linux/amd64 --use-gitignore=false --container-daemon-socket /var/run/docker.sock"
   },
   "dependencies": {
     "-": "^0.0.1",

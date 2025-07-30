@@ -38,7 +38,7 @@ jobs:
             MEILI_ENV=production
             MEILI_HTTP_ADDR=0.0.0.0:7700
           secrets: |
-            MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
+            MEILI_MASTER_KEY=MEILISEARCH_API_KEY:latest
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}

@@ -46,8 +46,10 @@ jobs:
             --port=8080
             --timeout=300
             --allow-unauthenticated
-          env_vars: MEILISEARCH_HOST=${{ secrets.MEILISEARCH_HOST }}
-          secrets: MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
+            --update-secrets MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
+            --update-env-vars MEILISEARCH_HOST=${{ secrets.MEILISEARCH_HOST }}
+          # env_vars: MEILISEARCH_HOST=${{ secrets.MEILISEARCH_HOST }}
+          # secrets: MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
             
 
       - name: Show Output

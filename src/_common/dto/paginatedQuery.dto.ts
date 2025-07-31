@@ -11,7 +11,9 @@ export class PaginatedQuery {
   @IsInt()
   @IsOptional()
   @Min(1)
-  @Transform(({ value }) => parseInt(value as string, 10))
+  @Transform(({ value }) => {
+    return parseInt(value as string, 10);
+  })
   public readonly take: number = 25;
 
   @ApiProperty({

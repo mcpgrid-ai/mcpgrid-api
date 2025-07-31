@@ -21,7 +21,7 @@ export class GetServersController {
 
   @Get()
   @ApiOperation({
-    operationId: 'getSearchServers',
+    operationId: 'getServers',
   })
   @ApiOkResponse({
     type: GetServersResponse,

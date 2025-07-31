@@ -41,6 +41,8 @@ export class GetServersController {
               'Title',
               'documentId',
               'Logo.url',
+              'Slug',
+              'GitHubOwner',
             ],
           });
 
@@ -51,6 +53,7 @@ export class GetServersController {
             logo: get(item, ['Logo', 'url'], null),
             icon: item.Category.Icon,
             slug: item.Slug,
+            owner: item.GitHubOwner,
           }),
         );
 

@@ -17,7 +17,9 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: (process.env.CORS_ORIGINS || '').split(',').map((v) => v.trim()),
+    origin: (process.env.CORS_ORIGIN_WHITELIST || '')
+      .split(',')
+      .map((v) => v.trim()),
   });
 
   app.useGlobalPipes(

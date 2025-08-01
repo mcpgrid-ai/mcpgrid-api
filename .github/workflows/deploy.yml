@@ -49,6 +49,8 @@ jobs:
           secrets: |
             MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
             MEILISEARCH_HOST=MEILISEARCH_HOST:latest
+          env_vars: |
+            CORS_ORIGIN_WHITELIST: ${{ vars.CORS_ORIGIN_WHITELIST }}
             
 
       - name: Show Output

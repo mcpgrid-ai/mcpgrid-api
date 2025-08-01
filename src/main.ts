@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RequestMethod } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 
@@ -15,6 +15,16 @@ async function bootstrap() {
       },
     ],
   });
+
+  app.enableCors({
+    origin: (process.env.CORS_ORIGINS || '').split(',').map((v) => v.trim()),
+  });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Mcpbox API')

@@ -46,7 +46,6 @@ jobs:
             --port=8080
             --timeout=300
             --allow-unauthenticated
-            --update-env-vars
           secrets: |
             MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
             MEILISEARCH_HOST=MEILISEARCH_HOST:latest

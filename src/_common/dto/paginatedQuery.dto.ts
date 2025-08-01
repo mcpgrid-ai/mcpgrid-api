@@ -23,7 +23,7 @@ export class PaginatedQuery {
   })
   @IsInt()
   @IsOptional()
-  @Min(1)
+  @Min(0)
   @Transform(({ value }) => parseInt(value as string, 10))
-  public readonly skip: number;
+  public readonly skip: number = 0;
 }

@@ -3,6 +3,8 @@ export interface ServerRecord {
   Title: string;
   Slug: string;
   GitHubOwner: string;
+  Description: string;
+  IsOfficial: boolean;
   Logo?: {
     url: string;
   };

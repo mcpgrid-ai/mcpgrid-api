@@ -24,9 +24,19 @@ export class ServerItem {
   public readonly owner: string;
 
   @ApiProperty({
+    type: String,
+  })
+  public readonly description: string;
+
+  @ApiProperty({
     type: HubIcon,
   })
   public readonly icon: HubIcon;
+
+  @ApiProperty({
+    type: Boolean,
+  })
+  public readonly isOfficial: boolean;
 
   @ApiProperty({
     type: String,

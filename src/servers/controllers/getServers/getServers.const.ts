@@ -9,4 +9,6 @@ export const SERVER_FIELDS: (keyof ServerRecord)[] = [
   'Logo.url',
   'Slug',
   'GitHubOwner',
+  'Description',
+  'IsOfficial',
 ];

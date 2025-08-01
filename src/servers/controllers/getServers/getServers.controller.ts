@@ -29,6 +29,8 @@ export class GetServersController {
         icon: item.Category.Icon,
         slug: item.Slug,
         owner: item.GitHubOwner,
+        description: item.Description,
+        isOfficial: item.IsOfficial,
       }),
     );
   }

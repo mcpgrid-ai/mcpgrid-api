@@ -9,6 +9,7 @@ import {
   ServerItem,
 } from './getServers.dto';
 import { ServerRecord } from './getServers.types';
+import { SERVER_FIELDS } from './getServers.const';
 
 @ApiTags('Servers')
 @Controller('servers')
@@ -18,6 +19,19 @@ export class GetServersController {
   });
 
   public constructor(private meilisearch: MeilisearchService) {}
+
+  private transform({ items }: { items: ServerRecord[] }): ServerItem[] {
+    return items.map(
+      (item): ServerItem => ({
+        id: item.documentId,
+        title: item.Title,
+        logo: get(item, ['Logo', 'url'], null),
+        icon: item.Category.Icon,
+        slug: item.Slug,
+        owner: item.GitHubOwner,
+      }),
+    );
+  }
 
   @Get()
   @ApiOperation({
@@ -36,26 +50,12 @@ export class GetServersController {
           .search(q, {
             limit: take,
             offset: skip,
-            attributesToRetrieve: [
-              'Category.Icon',
-              'Title',
-              'documentId',
-              'Logo.url',
-              'Slug',
-              'GitHubOwner',
-            ],
+            attributesToRetrieve: SERVER_FIELDS,
           });
 
-        const data = hits.map(
-          (item): ServerItem => ({
-            id: item.documentId,
-            title: item.Title,
-            logo: get(item, ['Logo', 'url'], null),
-            icon: item.Category.Icon,
-            slug: item.Slug,
-            owner: item.GitHubOwner,
-          }),
-        );
+        const data = this.transform({
+          items: hits,
+        });
 
         return {
           data,
@@ -63,9 +63,21 @@ export class GetServersController {
         };
       }
 
+      const { results, total } = await this.meilisearch
+        .index<ServerRecord>('server')
+        .getDocuments({
+          limit: take,
+          offset: skip,
+          fields: SERVER_FIELDS,
+        });
+
+      const data = this.transform({
+        items: results,
+      });
+
       return {
-        data: [],
-        total: 0,
+        data,
+        total,
       };
     } catch (error) {
       this.logger.error(error);

@@ -13,8 +13,7 @@ export class GetHealthController {
       status: 'ok',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
-      key: process.env.MEILISEARCH_API_KEY,
-      host: process.env.MEILISEARCH_HOST,
+      cors: process.env.CORS_ORIGIN_WHITELIST,
     };
   }
 }

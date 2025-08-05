@@ -11,13 +11,41 @@ export class ServersService implements OnModuleInit {
 
   public async onModuleInit() {
     try {
-      await this.meilisearch
+      const updateFilterableAttributes = this.meilisearch
         .index('server')
         .updateFilterableAttributes(['Category.Slug']);
-      const settings = await this.meilisearch
-        .index('servers')
+
+      const updateSearchableAttributes = await this.meilisearch
+        .index('server')
+        .updateSearchableAttributes(['Title', 'Description']);
+
+      await Promise.all([
+        updateFilterableAttributes,
+        updateSearchableAttributes,
+      ]);
+
+      const getFilterableAttributes = this.meilisearch
+        .index('server')
         .getFilterableAttributes();
-      this.logger.log('Meilisearch filterable attributes', settings);
+
+      const getSearchableAttributes = this.meilisearch
+        .index('server')
+        .getSearchableAttributes();
+
+      const [filterableAttributes, searchableAttributes] = await Promise.all([
+        getFilterableAttributes,
+        getSearchableAttributes,
+      ]);
+
+      this.logger.log(
+        'Meilisearch filterable attributes',
+        filterableAttributes,
+      );
+
+      this.logger.log(
+        'Meilisearch searchable attributes',
+        searchableAttributes,
+      );
     } catch (error) {
       this.logger.error(error);
     }

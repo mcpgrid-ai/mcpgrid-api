@@ -24,9 +24,19 @@ export class ServerItem {
   public readonly owner: string;
 
   @ApiProperty({
+    type: String,
+  })
+  public readonly description: string;
+
+  @ApiProperty({
     type: HubIcon,
   })
   public readonly icon: HubIcon;
+
+  @ApiProperty({
+    type: Boolean,
+  })
+  public readonly isOfficial: boolean;
 
   @ApiProperty({
     type: String,
@@ -43,6 +53,14 @@ export class GetServersRequest extends PaginatedQuery {
   @IsOptional()
   @IsString()
   public readonly q: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  public readonly category: string;
 }
 
 export class GetServersResponse extends PaginatedResponse<ServerItem> {

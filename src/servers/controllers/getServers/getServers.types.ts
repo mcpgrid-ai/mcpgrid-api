@@ -17,3 +17,7 @@ export interface ServerRecord {
     };
   };
 }
+
+export interface GetFilterParams {
+  category?: string;
+}

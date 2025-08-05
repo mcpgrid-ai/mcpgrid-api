@@ -53,6 +53,14 @@ export class GetServersRequest extends PaginatedQuery {
   @IsOptional()
   @IsString()
   public readonly q: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  public readonly category: string;
 }
 
 export class GetServersResponse extends PaginatedResponse<ServerItem> {

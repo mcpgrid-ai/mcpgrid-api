@@ -8,7 +8,7 @@ import {
   GetServersResponse,
   ServerItem,
 } from './getServers.dto';
-import { ServerRecord } from './getServers.types';
+import { ServerRecord, GetFilterParams } from './getServers.types';
 import { SERVER_FIELDS } from './getServers.const';
 
 @ApiTags('Servers')
@@ -19,6 +19,14 @@ export class GetServersController {
   });
 
   public constructor(private meilisearch: MeilisearchService) {}
+
+  private getFilter({ category }: GetFilterParams): { filter: string[] } {
+    const filter = [
+      category ? `Category.Slug = "${category}"` : undefined,
+    ].filter((v) => v !== undefined);
+
+    return { filter };
+  }
 
   private transform({ items }: { items: ServerRecord[] }): ServerItem[] {
     return items.map(
@@ -43,13 +51,20 @@ export class GetServersController {
     type: GetServersResponse,
   })
   public async getSearchServers(
-    @Query() { take, q, skip }: GetServersRequest,
+    @Query() { take, q, skip, category }: GetServersRequest,
   ): Promise<GetServersResponse> {
     try {
+      await this.meilisearch
+        .index('servers')
+        .updateFilterableAttributes(['Category.Slug']);
+
+      const { filter } = this.getFilter({ category });
+
       if (q) {
         const { hits, estimatedTotalHits } = await this.meilisearch
           .index<ServerRecord>('server')
           .search(q, {
+            filter,
             limit: take,
             offset: skip,
             attributesToRetrieve: SERVER_FIELDS,
@@ -68,6 +83,7 @@ export class GetServersController {
       const { results, total } = await this.meilisearch
         .index<ServerRecord>('server')
         .getDocuments({
+          filter,
           limit: take,
           offset: skip,
           fields: SERVER_FIELDS,

@@ -1,8 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RequestMethod, ValidationPipe } from '@nestjs/common';
+import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from './app.module';
+
+const logger = new Logger(bootstrap.name, {
+  timestamp: true,
+});
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -43,5 +47,10 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 8080, '0.0.0.0');
 }
 
-// eslint-disable-next-line no-console
-bootstrap().then(console.log).catch(console.error);
+bootstrap()
+  .then(() => {
+    logger.log('Ready');
+  })
+  .catch((error) => {
+    logger.error(error);
+  });

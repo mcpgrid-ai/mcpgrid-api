@@ -1,19 +1,20 @@
+import { UploadApiResponse } from '@services/cloudinary';
+
 export interface ServerRecord {
-  documentId: string;
-  Title: string;
-  Slug: string;
-  GitHubOwner: string;
-  Description: string;
-  IsOfficial: boolean;
-  Logo?: {
-    url: string;
+  id: string;
+  title: string;
+  slug: string;
+  githubOwner: string;
+  description: string;
+  isOfficial: boolean;
+  icon?: {
+    _id: string;
+    _meta: UploadApiResponse;
   };
-  Category: {
-    Icon: {
-      iconData: string;
-      iconName: string;
-      width: number;
-      height: number;
+  category: {
+    icon?: {
+      _id: string;
+      _meta: UploadApiResponse;
     };
   };
 }

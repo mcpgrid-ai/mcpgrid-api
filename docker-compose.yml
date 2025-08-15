@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   meilisearch:
-    image: getmeili/meilisearch:latest
+    image: getmeili/meilisearch:v1.15
     container_name: meilisearch
     environment:
       MEILI_MASTER_KEY: your_strong_master_key

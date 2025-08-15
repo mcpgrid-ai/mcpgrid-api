@@ -27,6 +27,7 @@
     "D": "^1.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "cloudinary": "^2.7.0",
     "lodash": "^4.17.21",
     "meilisearch": "^0.51.0",
     "reflect-metadata": "^0.2.2",

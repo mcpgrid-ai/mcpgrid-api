@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MeilisearchService } from '@services/meilisearch';
-import { get } from 'lodash';
+import { CloudinaryService } from '@services/cloudinary';
 
 import {
   GetServersRequest,
@@ -18,27 +18,46 @@ export class GetServersController {
     timestamp: true,
   });
 
-  public constructor(private meilisearch: MeilisearchService) {}
+  public constructor(
+    private meilisearch: MeilisearchService,
+    private cloudinary: CloudinaryService,
+  ) {}
 
   private getFilter({ category }: GetFilterParams): { filter: string[] } {
     const filter = [
-      category ? `Category.Slug = "${category}"` : undefined,
+      category ? `category.slug = "${category}"` : undefined,
     ].filter((v) => v !== undefined);
 
     return { filter };
   }
 
+  public getServerLogo(item: ServerRecord) {
+    if (item.icon?._meta) {
+      return this.cloudinary.url({ publicId: item.icon._meta.public_id });
+    }
+    return null;
+  }
+
+  public getServerIcon(item: ServerRecord) {
+    if (item.category.icon?._meta) {
+      return this.cloudinary.url({
+        publicId: item.category.icon?._meta.public_id,
+      });
+    }
+    return null;
+  }
+
   private transform({ items }: { items: ServerRecord[] }): ServerItem[] {
     return items.map(
       (item): ServerItem => ({
-        id: item.documentId,
-        title: item.Title,
-        logo: get(item, ['Logo', 'url'], null),
-        icon: item.Category.Icon,
-        slug: item.Slug,
-        owner: item.GitHubOwner,
-        description: item.Description,
-        isOfficial: item.IsOfficial,
+        id: item.id,
+        title: item.title,
+        logo: this.getServerLogo(item),
+        icon: this.getServerIcon(item),
+        slug: item.slug,
+        owner: item.githubOwner,
+        description: item.description,
+        isOfficial: item.isOfficial,
       }),
     );
   }
@@ -54,10 +73,6 @@ export class GetServersController {
     @Query() { take, q, skip, category }: GetServersRequest,
   ): Promise<GetServersResponse> {
     try {
-      await this.meilisearch
-        .index('servers')
-        .updateFilterableAttributes(['Category.Slug']);
-
       const { filter } = this.getFilter({ category });
 
       if (q) {
@@ -92,6 +107,8 @@ export class GetServersController {
       const data = this.transform({
         items: results,
       });
+
+      console.log(data);
 
       return {
         data,

@@ -1,4 +1,4 @@
-import { PaginatedQuery, PaginatedResponse, HubIcon } from '@common/dto';
+import { PaginatedQuery, PaginatedResponse } from '@common/dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
@@ -29,9 +29,10 @@ export class ServerItem {
   public readonly description: string;
 
   @ApiProperty({
-    type: HubIcon,
+    type: String,
+    nullable: true,
   })
-  public readonly icon: HubIcon;
+  public readonly icon: string | null;
 
   @ApiProperty({
     type: Boolean,

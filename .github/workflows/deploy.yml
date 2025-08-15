@@ -49,6 +49,9 @@ jobs:
           secrets: |
             MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
             MEILISEARCH_HOST=MEILISEARCH_HOST:latest
+            CLOUDINARY_API_KEY=CLOUDINARY_API_KEY:latest
+            CLOUDINARY_API_SECRET=CLOUDINARY_API_SECRET:latest
+            CLOUDINARY_CLOUD_NAME=CLOUDINARY_CLOUD_NAME:latest
           env_vars: |
             CORS_ORIGIN_WHITELIST=${{ vars.CORS_ORIGIN_WHITELIST }}
             

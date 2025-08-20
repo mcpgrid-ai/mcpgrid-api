@@ -46,6 +46,7 @@ jobs:
             --port=8080
             --timeout=300
             --allow-unauthenticated
+            --min-instances=1
           secrets: |
             MEILISEARCH_API_KEY=MEILISEARCH_API_KEY:latest
             MEILISEARCH_HOST=MEILISEARCH_HOST:latest
@@ -58,5 +59,14 @@ jobs:
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
+
+      - name: Warm up service
+        run: |
+          for i in {1..5}; do
+            curl -fsS "${{ steps.deploy.outputs.url }}" && exit 0
+            echo "Retrying in 3s..."
+            sleep 3
+          done
+          echo "Service did not respond successfully" && exit 1
 
       

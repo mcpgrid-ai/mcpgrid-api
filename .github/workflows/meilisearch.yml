@@ -33,9 +33,10 @@ jobs:
           region: ${{ env.GCP_REGION }}
           image: getmeili/meilisearch:latest
           flags: |
-            --port 7700
-            --timeout 300
+            --port=7700
+            --timeout=300
             --platform=managed
+            --min-instances=1
             --add-volume name=meilisearch-data,type=cloud-storage,bucket=${{ env.GCP_MEILISEARCH_BUCKETNAME }}
             --add-volume-mount volume=meilisearch-data,mount-path=/meili_data
             --allow-unauthenticated
@@ -47,3 +48,12 @@ jobs:
 
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
+
+      - name: Warm up service
+        run: |
+          for i in {1..5}; do
+            curl -fsS "${{ steps.deploy.outputs.url }}" && exit 0
+            echo "Retrying in 3s..."
+            sleep 3
+          done
+          echo "Service did not respond successfully" && exit 1

@@ -3,6 +3,11 @@ name: Meilisearch
 on:
   workflow_dispatch:
 
+env:
+  GCP_CLOUD_RUN_SERVICE_NAME: mcpbox-meilisearch
+  GCP_MEILISEARCH_BUCKETNAME: mcp-box-meilisearch
+  GCP_REGION: us-central1
+
 jobs:
   meilisearch:
     name: Meilisearch
@@ -24,14 +29,14 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_MEILISEARCH }}
-          region: ${{ vars.GCP_REGION }}
+          service: ${{ env.GCP_CLOUD_RUN_SERVICE_NAME }}
+          region: ${{ env.GCP_REGION }}
           image: getmeili/meilisearch:latest
           flags: |
             --port 7700
             --timeout 300
             --platform=managed
-            --add-volume name=meilisearch-data,type=cloud-storage,bucket=${{ secrets.GCP_MEILISEARCH_BUCKETNAME }}
+            --add-volume name=meilisearch-data,type=cloud-storage,bucket=${{ env.GCP_MEILISEARCH_BUCKETNAME }}
             --add-volume-mount volume=meilisearch-data,mount-path=/meili_data
             --allow-unauthenticated
           env_vars: |

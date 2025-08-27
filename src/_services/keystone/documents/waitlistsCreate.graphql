@@ -1,0 +1,5 @@
+mutation waitlistsCreate($data: WaitlistCreateInput!) {
+  createWaitlist(data: $data) {
+    id
+  }
+}

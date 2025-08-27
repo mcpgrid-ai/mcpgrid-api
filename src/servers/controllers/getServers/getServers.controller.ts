@@ -108,8 +108,6 @@ export class GetServersController {
         items: results,
       });
 
-      console.log(data);
-
       return {
         data,
         total,

@@ -6,7 +6,7 @@ import pluginImport from 'eslint-plugin-import';
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs'],
+    ignores: ['eslint.config.mjs', '**/__generated__/**'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,

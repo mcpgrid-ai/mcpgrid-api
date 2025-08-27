@@ -5,6 +5,11 @@ on:
     branches: main
   workflow_dispatch:
 
+env:
+  DOCKER_IMAGE: ''
+  GCP_CLOUD_RUN_SERVICE_NAME: mcpbox-api
+
+
 
 jobs:
   deploy:
@@ -18,30 +23,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup environment variables
+        run: |
+          echo "DOCKER_IMAGE=${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.GCP_CLOUD_RUN_SERVICE_NAME }}/${{ env.GCP_CLOUD_RUN_SERVICE_NAME }}:${{ github.sha }}" >> $GITHUB_ENV
+
       - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_API }}
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Docker Auth
         uses: docker/login-action@v3
         with:
           registry: ${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev
           username: _json_key
-          password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_API }}
+          password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Build and Push Container
         run: |-
-          docker build -t "${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}:${{ github.sha }}" ./
-          docker push "${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}:${{ github.sha }}"
+          docker build -t "${{ env.DOCKER_IMAGE }}" ./
+          docker push "${{ env.DOCKER_IMAGE }}"
 
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}
+          service: ${{ env.GCP_CLOUD_RUN_SERVICE_NAME }}
           region: ${{ vars.GCP_REGION }}
-          image: ${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}/${{ vars.GCP_CLOUD_RUN_SERVICE_NAME_API }}:${{ github.sha }}
+          image: ${{ env.DOCKER_IMAGE }}
           flags: |
             --port=8080
             --timeout=300

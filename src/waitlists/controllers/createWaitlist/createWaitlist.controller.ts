@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Body,
   ConflictException,
@@ -8,7 +6,12 @@ import {
   Logger,
   Post,
 } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiException } from '@common/dto';
 import { KeystoneClientService } from '@services/keystone';
 
@@ -27,6 +30,9 @@ export class CreateWaitlistController {
   public constructor(private keystone: KeystoneClientService) {}
 
   @Post()
+  @ApiOperation({
+    operationId: 'createWaitlist',
+  })
   @ApiBadRequestResponse({
     type: ApiException,
   })

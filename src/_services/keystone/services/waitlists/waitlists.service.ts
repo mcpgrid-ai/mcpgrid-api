@@ -8,6 +8,9 @@ import {
   WaitlistsCreate,
   WaitlistsCreateMutation,
   WaitlistsCreateMutationVariables,
+  WaitlistsFindUnique,
+  WaitlistsFindUniqueQuery,
+  WaitlistsFindUniqueQueryVariables,
 } from '../../__generated__/query';
 
 @Injectable()
@@ -17,6 +20,25 @@ export class WaitlistsService {
   });
 
   public constructor(private client: GqlClientService) {}
+
+  public async findUnique(variables: WaitlistsFindUniqueQueryVariables) {
+    try {
+      const { data } = await this.client.query<
+        WaitlistsFindUniqueQuery,
+        WaitlistsFindUniqueQueryVariables
+      >({
+        variables,
+        query: WaitlistsFindUnique,
+      });
+
+      if (!data) throw new Error('No data');
+
+      return { data: get(data, ['waitlist']) };
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
 
   public async create(variables: WaitlistsCreateMutationVariables) {
     try {
@@ -30,9 +52,7 @@ export class WaitlistsService {
 
       if (!data) throw new Error('No data');
 
-      const log = get(data, ['createLog']);
-
-      return { data: log };
+      return { data: get(data, ['createWaitlist']) };
     } catch (error) {
       this.logger.error(error);
       throw error;

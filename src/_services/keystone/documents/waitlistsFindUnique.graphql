@@ -1,0 +1,5 @@
+query waitlistsFindUnique($where: WaitlistWhereUniqueInput!) {
+  waitlist(where: $where) {
+    id
+  }
+}

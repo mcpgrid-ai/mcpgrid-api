@@ -1330,10 +1330,24 @@ export type WaitlistsCreateMutationVariables = Exact<{
 
 export type WaitlistsCreateMutation = { __typename?: 'Mutation', createWaitlist?: { __typename?: 'Waitlist', id: string } | null };
 
+export type WaitlistsFindUniqueQueryVariables = Exact<{
+  where: WaitlistWhereUniqueInput;
+}>;
+
+
+export type WaitlistsFindUniqueQuery = { __typename?: 'Query', waitlist?: { __typename?: 'Waitlist', id: string } | null };
+
 
 export const WaitlistsCreate = gql`
     mutation waitlistsCreate($data: WaitlistCreateInput!) {
   createWaitlist(data: $data) {
+    id
+  }
+}
+    `;
+export const WaitlistsFindUnique = gql`
+    query waitlistsFindUnique($where: WaitlistWhereUniqueInput!) {
+  waitlist(where: $where) {
     id
   }
 }

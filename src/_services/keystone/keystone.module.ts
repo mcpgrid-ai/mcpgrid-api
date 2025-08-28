@@ -44,10 +44,23 @@ export class KeystoneModule {
         },
         {
           provide: GqlClientService,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           useValue: new GqlClientService({
             link: link,
             cache: new InMemoryCache({}),
+            defaultOptions: {
+              watchQuery: {
+                fetchPolicy: 'no-cache',
+                errorPolicy: 'ignore',
+              },
+              query: {
+                fetchPolicy: 'no-cache',
+                errorPolicy: 'all',
+              },
+              mutate: {
+                fetchPolicy: 'no-cache',
+              },
+            },
           }),
         },
       ],

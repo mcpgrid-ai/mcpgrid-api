@@ -6,10 +6,11 @@ import { GqlClientService } from './services/gql-client';
 import { KeystoneClientService } from './services/keystone-client';
 import { HttpClientService } from './services/http-client';
 import { WaitlistsService } from './services/waitlists';
+import { ServersService } from './services/servers';
 import { KeystoneModuleConfig } from './keystone.types';
 
 @Module({
-  providers: [KeystoneClientService, WaitlistsService],
+  providers: [KeystoneClientService, WaitlistsService, ServersService],
   exports: [KeystoneClientService],
 })
 export class KeystoneModule {

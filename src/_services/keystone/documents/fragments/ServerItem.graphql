@@ -1,0 +1,16 @@
+fragment ServerItem on Server {
+  id
+  title
+  slug
+  isOfficial
+  description
+  githubOwner
+  category {
+    icon {
+      publicUrlTransformed
+    }
+  }
+  icon {
+    publicUrlTransformed
+  }
+}

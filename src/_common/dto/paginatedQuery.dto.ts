@@ -14,7 +14,7 @@ export class PaginatedQuery {
   @Transform(({ value }) => {
     return parseInt(value as string, 10);
   })
-  public readonly take: number = 25;
+  public readonly take: number = 24;
 
   @ApiProperty({
     name: 'skip',

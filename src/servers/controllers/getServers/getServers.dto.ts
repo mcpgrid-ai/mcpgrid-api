@@ -29,12 +29,6 @@ export class ServerItem {
   public readonly description: string;
 
   @ApiProperty({
-    type: String,
-    nullable: true,
-  })
-  public readonly icon: string | null;
-
-  @ApiProperty({
     type: Boolean,
   })
   public readonly isOfficial: boolean;
@@ -43,7 +37,7 @@ export class ServerItem {
     type: String,
     nullable: true,
   })
-  public readonly logo: string | null;
+  public readonly logo?: string | null;
 }
 
 export class GetServersRequest extends PaginatedQuery {

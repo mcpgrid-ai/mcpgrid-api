@@ -15,13 +15,16 @@ const config: CodegenConfig = {
       config: {
         documentVariableSuffix: 'Document',
       },
-      documents: ['./src/_services/keystone/documents/*.graphql'],
+      documents: ['./src/_services/keystone/documents/**/*.graphql'],
       plugins: [
         'typescript',
         'typescript-operations',
         'typescript-document-nodes',
       ],
     },
+  },
+  config: {
+    dedupeFragments: true,
   },
 };
 

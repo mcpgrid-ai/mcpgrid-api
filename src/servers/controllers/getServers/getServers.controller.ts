@@ -1,15 +1,13 @@
 import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { MeilisearchService } from '@services/meilisearch';
-import { CloudinaryService } from '@services/cloudinary';
+import { DTO, KeystoneClientService } from '@services/keystone';
+import { castArray } from 'lodash';
 
 import {
   GetServersRequest,
   GetServersResponse,
   ServerItem,
 } from './getServers.dto';
-import { ServerRecord, GetFilterParams } from './getServers.types';
-import { SERVER_FIELDS } from './getServers.const';
 
 @ApiTags('Servers')
 @Controller('servers')
@@ -18,49 +16,7 @@ export class GetServersController {
     timestamp: true,
   });
 
-  public constructor(
-    private meilisearch: MeilisearchService,
-    private cloudinary: CloudinaryService,
-  ) {}
-
-  private getFilter({ category }: GetFilterParams): { filter: string[] } {
-    const filter = [
-      category ? `category.slug = "${category}"` : undefined,
-    ].filter((v) => v !== undefined);
-
-    return { filter };
-  }
-
-  public getServerLogo(item: ServerRecord) {
-    if (item.icon?._meta) {
-      return this.cloudinary.url({ publicId: item.icon._meta.public_id });
-    }
-    return null;
-  }
-
-  public getServerIcon(item: ServerRecord) {
-    if (item.category.icon?._meta) {
-      return this.cloudinary.url({
-        publicId: item.category.icon?._meta.public_id,
-      });
-    }
-    return null;
-  }
-
-  private transform({ items }: { items: ServerRecord[] }): ServerItem[] {
-    return items.map(
-      (item): ServerItem => ({
-        id: item.id,
-        title: item.title,
-        logo: this.getServerLogo(item),
-        icon: this.getServerIcon(item),
-        slug: item.slug,
-        owner: item.githubOwner,
-        description: item.description,
-        isOfficial: item.isOfficial,
-      }),
-    );
-  }
+  public constructor(private keystone: KeystoneClientService) {}
 
   @Get()
   @ApiOperation({
@@ -73,44 +29,66 @@ export class GetServersController {
     @Query() { take, q, skip, category }: GetServersRequest,
   ): Promise<GetServersResponse> {
     try {
-      const { filter } = this.getFilter({ category });
+      const or: DTO.ServerWhereInput['OR'] = [q].concat(q?.split(' ')).reduce(
+        (res, contains): DTO.ServerWhereInput['OR'] => [
+          ...(res ? castArray(res) : []),
+          {
+            title: {
+              contains,
+              mode: DTO.QueryMode.Insensitive,
+            },
+          },
+          {
+            description: {
+              contains,
+              mode: DTO.QueryMode.Insensitive,
+            },
+          },
+          {
+            keywords: {
+              contains,
+              mode: DTO.QueryMode.Insensitive,
+            },
+          },
+        ],
+        [] as DTO.ServerWhereInput['OR'],
+      );
 
-      if (q) {
-        const { hits, estimatedTotalHits } = await this.meilisearch
-          .index<ServerRecord>('server')
-          .search(q, {
-            filter,
-            limit: take,
-            offset: skip,
-            attributesToRetrieve: SERVER_FIELDS,
-          });
-
-        const data = this.transform({
-          items: hits,
-        });
-
-        return {
-          data,
-          total: estimatedTotalHits,
-        };
-      }
-
-      const { results, total } = await this.meilisearch
-        .index<ServerRecord>('server')
-        .getDocuments({
-          filter,
-          limit: take,
-          offset: skip,
-          fields: SERVER_FIELDS,
-        });
-
-      const data = this.transform({
-        items: results,
+      const { servers, serversCount } = await this.keystone.servers.findMany({
+        take,
+        skip,
+        where: {
+          category: {
+            OR: [
+              {
+                slug: {
+                  equals: category,
+                },
+                id: {
+                  equals: category,
+                },
+              },
+            ],
+          },
+          OR: or,
+        },
       });
+
+      const data: ServerItem[] = (servers || []).map((item) => ({
+        id: item.id,
+        slug: item.slug || '',
+        title: item.title || '',
+        description: item.description || '',
+        isOfficial: item.isOfficial === null ? false : !!item.isOfficial,
+        owner: item.githubOwner || '',
+        logo:
+          item.icon?.publicUrlTransformed ||
+          item.category?.icon?.publicUrlTransformed,
+      }));
 
       return {
         data,
-        total,
+        total: serversCount || 0,
       };
     } catch (error) {
       this.logger.error(error);

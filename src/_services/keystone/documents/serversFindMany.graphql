@@ -1,0 +1,12 @@
+#import "./fragments/ServerItem.graphql"
+
+query serversFindMany(
+  $where: ServerWhereInput
+  $take: Int!
+  $skip: Int!
+) {
+  servers(where: $where, take: $take, skip: $skip) {
+    ...ServerItem
+  }
+  serversCount(where: $where)
+}

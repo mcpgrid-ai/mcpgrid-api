@@ -10,34 +10,52 @@ export class ServerItem {
 
   @ApiProperty({
     type: String,
+    nullable: true,
+    required: false,
   })
-  public readonly slug: string;
-
-  @ApiProperty({
-    type: String,
-  })
-  public readonly title: string;
-
-  @ApiProperty({
-    type: String,
-  })
-  public readonly owner: string;
-
-  @ApiProperty({
-    type: String,
-  })
-  public readonly description: string;
-
-  @ApiProperty({
-    type: Boolean,
-  })
-  public readonly isOfficial: boolean;
+  public readonly slug?: string | null;
 
   @ApiProperty({
     type: String,
     nullable: true,
+    required: false,
+  })
+  public readonly title?: string | null;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    required: false,
+  })
+  public readonly owner?: string | null;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    required: false,
+  })
+  public readonly description?: string | null;
+
+  @ApiProperty({
+    type: Boolean,
+    nullable: true,
+    required: false,
+  })
+  public readonly isOfficial?: boolean | null;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    required: false,
   })
   public readonly logo?: string | null;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    required: false,
+  })
+  public readonly icon?: string | null;
 }
 
 export class GetServersRequest extends PaginatedQuery {

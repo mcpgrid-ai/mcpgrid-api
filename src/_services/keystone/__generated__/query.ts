@@ -1447,6 +1447,13 @@ export type ServersFindManyQueryVariables = Exact<{
 
 export type ServersFindManyQuery = { __typename?: 'Query', serversCount?: number | null, servers?: Array<{ __typename?: 'Server', id: string, title?: string | null, slug?: string | null, isOfficial?: boolean | null, description?: string | null, githubOwner?: string | null, category?: { __typename?: 'ServerCategory', icon?: { __typename?: 'CloudinaryImage_File', publicUrlTransformed?: string | null } | null } | null, icon?: { __typename?: 'CloudinaryImage_File', publicUrlTransformed?: string | null } | null }> | null };
 
+export type ServersFindUniqueQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type ServersFindUniqueQuery = { __typename?: 'Query', server?: { __typename?: 'Server', id: string, title?: string | null, slug?: string | null, isOfficial?: boolean | null, description?: string | null, githubOwner?: string | null, homepage?: string | null, githubUrl?: string | null, githubLanguage?: string | null, githubLicense?: string | null, githubPublishedAt?: any | null, overview?: string | null, tools?: any | null, settings?: any | null, category?: { __typename?: 'ServerCategory', icon?: { __typename?: 'CloudinaryImage_File', publicUrlTransformed?: string | null } | null } | null, icon?: { __typename?: 'CloudinaryImage_File', publicUrlTransformed?: string | null } | null } | null };
+
 export type WaitlistsCreateMutationVariables = Exact<{
   data: WaitlistCreateInput;
 }>;
@@ -1487,6 +1494,34 @@ export const ServersFindMany = gql`
   serversCount(where: $where)
 }
     ${ServerItem}`;
+export const ServersFindUnique = gql`
+    query serversFindUnique($id: ID!) {
+  server(where: {id: $id}) {
+    id
+    title
+    slug
+    isOfficial
+    description
+    githubOwner
+    homepage
+    githubUrl
+    githubLanguage
+    githubLicense
+    githubPublishedAt
+    overview
+    tools
+    settings
+    category {
+      icon {
+        publicUrlTransformed
+      }
+    }
+    icon {
+      publicUrlTransformed
+    }
+  }
+}
+    `;
 export const WaitlistsCreate = gql`
     mutation waitlistsCreate($data: WaitlistCreateInput!) {
   createWaitlist(data: $data) {

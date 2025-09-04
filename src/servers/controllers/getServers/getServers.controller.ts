@@ -76,14 +76,13 @@ export class GetServersController {
 
       const data: ServerItem[] = (servers || []).map((item) => ({
         id: item.id,
-        slug: item.slug || '',
-        title: item.title || '',
-        description: item.description || '',
-        isOfficial: item.isOfficial === null ? false : !!item.isOfficial,
-        owner: item.githubOwner || '',
-        logo:
-          item.icon?.publicUrlTransformed ||
-          item.category?.icon?.publicUrlTransformed,
+        slug: item.slug,
+        title: item.title,
+        description: item.description,
+        isOfficial: item.isOfficial,
+        owner: item.githubOwner,
+        icon: item.category?.icon?.publicUrlTransformed,
+        logo: item.icon?.publicUrlTransformed,
       }));
 
       return {

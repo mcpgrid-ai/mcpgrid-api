@@ -1,0 +1,26 @@
+query serversFindUnique($id: ID!) {
+  server(where: { id: $id }) {
+    id
+    title
+    slug
+    isOfficial
+    description
+    githubOwner
+    homepage
+    githubUrl
+    githubLanguage
+    githubLicense
+    githubPublishedAt
+    overview
+    tools
+    settings
+    category {
+      icon {
+        publicUrlTransformed
+      }
+    }
+    icon {
+      publicUrlTransformed
+    }
+  }
+}

@@ -33,7 +33,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Mcpbox API')
+    .setTitle('Mcpgrid API')
     .addBearerAuth()
     .build();
 
@@ -48,9 +48,7 @@ async function bootstrap() {
 }
 
 bootstrap()
-  .then(() => {
-    logger.log('Ready');
-  })
-  .catch((error) => {
-    logger.error(error);
-  });
+  .then(() =>
+    logger.log(`Server is running on port ${process.env.PORT ?? 8080}`),
+  )
+  .catch((error) => logger.error(error));

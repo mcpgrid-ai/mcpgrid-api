@@ -4,8 +4,9 @@ import { CloudinaryModule } from '@services/cloudinary';
 import { KeystoneModule } from '@services/keystone';
 import { DeployerModule } from '@services/deployer';
 
-import { ServersModule } from './servers';
 import { HealthModule } from './health';
+import { InstancesModule } from './instances';
+import { ServersModule } from './servers';
 import { WaitlistsModule } from './waitlists';
 
 @Module({
@@ -27,6 +28,7 @@ import { WaitlistsModule } from './waitlists';
     }),
     // Features
     HealthModule,
+    InstancesModule,
     ServersModule,
     WaitlistsModule,
   ],

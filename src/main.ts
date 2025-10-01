@@ -33,7 +33,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Mcpbox API')
+    .setTitle('Mcpgrid API')
     .addBearerAuth()
     .build();
 

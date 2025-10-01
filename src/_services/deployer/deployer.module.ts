@@ -21,11 +21,11 @@ export class DeployerModule {
         {
           provide: PubSubClientService,
           useValue: new PubSubClientService({
+            topic,
             client: {
               apiEndpoint,
               projectId,
             },
-            topic,
           }),
         },
       ],

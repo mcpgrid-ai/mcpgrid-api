@@ -11,6 +11,6 @@ export class DeployerMessagesService {
   public constructor(private client: PubSubClientService) {}
 
   public test(message: string) {
-    this.client.send('test', { message });
+    this.client.emit('test', { message });
   }
 }

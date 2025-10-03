@@ -27,7 +27,10 @@ import { WaitlistsModule } from './waitlists';
       apiSecret: process.env.CLOUDINARY_API_SECRET,
       cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     }),
-    AuthModule.forRoot(process.env.GCP_ADMIN_ACCOUNT_KEY),
+    AuthModule.forRoot({
+      config: process.env.GCP_ADMIN_ACCOUNT_KEY,
+      secret: process.env.NEXTAUTH_SECRET,
+    }),
     // Features
     HealthModule,
     InstancesModule,

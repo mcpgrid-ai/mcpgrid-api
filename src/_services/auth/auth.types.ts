@@ -1,5 +1,6 @@
+import { ServiceAccount } from 'firebase-admin';
+
 export interface AuthModuleConfig {
-  projectId: string;
-  clientEmail: string;
-  privateKey: string;
+  secret: string;
+  config: string | ServiceAccount;
 }

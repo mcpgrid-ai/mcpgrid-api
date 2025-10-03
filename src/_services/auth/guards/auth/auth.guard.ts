@@ -34,17 +34,14 @@ export class AuthGuard implements CanActivate {
     try {
       const user = await this.auth.verifyIdToken(token);
 
-      if (!user)
-        throw new UnauthorizedException(
-          'Missing or invalid Authorization token',
-        );
+      if (!user) throw new UnauthorizedException('Invalid authorization token');
 
       req.user = user;
 
       return true;
     } catch (error) {
       this.logger.error(error);
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid authorization token');
     }
   }
 }

@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CloudinaryModule } from '@services/cloudinary';
 import { KeystoneModule } from '@services/keystone';
 import { DeployerModule } from '@services/deployer';
+import { AuthModule } from '@services/auth';
 
 import { HealthModule } from './health';
 import { InstancesModule } from './instances';
@@ -26,6 +27,7 @@ import { WaitlistsModule } from './waitlists';
       apiSecret: process.env.CLOUDINARY_API_SECRET,
       cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     }),
+    AuthModule.forRoot(process.env.GCP_ADMIN_ACCOUNT_KEY),
     // Features
     HealthModule,
     InstancesModule,

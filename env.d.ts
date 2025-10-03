@@ -12,6 +12,5 @@ declare namespace NodeJS {
     GCP_PUB_SUB_DEPLOYER_TOPIC: string;
     GCP_PROJECT_ID: string;
     GCP_ADMIN_ACCOUNT_KEY: string;
-    NEXTAUTH_SECRET: string;
   }
 }

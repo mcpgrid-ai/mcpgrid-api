@@ -39,6 +39,7 @@ export default tseslint.config(
         'error',
         { accessibility: 'explicit' },
       ],
+      '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',

@@ -61,9 +61,10 @@ jobs:
             CLOUDINARY_API_KEY=CLOUDINARY_API_KEY:latest
             CLOUDINARY_API_SECRET=CLOUDINARY_API_SECRET:latest
             CLOUDINARY_CLOUD_NAME=CLOUDINARY_CLOUD_NAME:latest
+            GCP_ADMIN_ACCOUNT_KEY=GCP_ADMIN_ACCOUNT_KEY:latest
+            GCP_PUB_SUB_DEPLOYER_TOPIC=PUB_SUB_DEPLOYER_TOPIC:latest
           env_vars: |
             CORS_ORIGIN_WHITELIST=${{ vars.CORS_ORIGIN_WHITELIST }}
-            GCP_PUB_SUB_DEPLOYER_TOPIC=${{ vars.GCP_PUB_SUB_DEPLOYER_TOPIC }}
             
 
       - name: Show Output

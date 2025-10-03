@@ -21,6 +21,7 @@ async function bootstrap() {
   });
 
   app.enableCors({
+    credentials: true,
     origin: (process.env.CORS_ORIGIN_WHITELIST || '')
       .split(',')
       .map((v) => v.trim()),

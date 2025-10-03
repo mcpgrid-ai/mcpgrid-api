@@ -1,21 +1,50 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
 
+import { AuthClientService } from '../../services/auth-client';
+
 @Injectable()
 export class AuthGuard implements CanActivate {
-  public canActivate(context: ExecutionContext): boolean {
+  private readonly logger = new Logger(AuthGuard.name, {
+    timestamp: true,
+  });
+
+  public constructor(private readonly auth: AuthClientService) {}
+
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
 
-    const test = req.cookies['next-auth.session-token'] as string;
-    console.log(test);
+    const authorization = req.headers.authorization || '';
 
-    if (!test) throw new UnauthorizedException();
+    const [, token] = authorization.split(' ');
 
-    return true;
+    if (!token)
+      throw new UnauthorizedException(
+        'Missing or invalid Authorization header',
+      );
+
+    try {
+      const user = await this.auth.verifyIdToken(token);
+
+      if (!user)
+        throw new UnauthorizedException(
+          'Missing or invalid Authorization token',
+        );
+
+      req.user = user;
+
+      return true;
+    } catch (error) {
+      this.logger.error(error);
+      throw new UnauthorizedException();
+    }
   }
 }
